@@ -4,5 +4,4 @@ import Shirt from "./Shirt";
 import Backdrop from "./Backdrop";
 import CameraRig from "./CameraRig";
 
-export { Shirt, Backdrop, CameraRig };
-export default CanvasModel;
+export { Shirt, Backdrop, CameraRig, CanvasModel };

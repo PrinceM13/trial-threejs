@@ -1,4 +1,4 @@
-import CanvasModel from "@/canvas";
+import { CanvasModel } from "@/canvas";
 import { Customizer, Home } from "@/contents";
 
 export default function App() {
