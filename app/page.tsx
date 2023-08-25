@@ -1,5 +1,5 @@
 import Canvas from "@/canvas";
-import { Customizer, Home } from "@/pages";
+import { Customizer, Home } from "@/contents";
 
 export default function App() {
   return (
