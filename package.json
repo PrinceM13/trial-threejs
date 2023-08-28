@@ -28,5 +28,8 @@
     "three": "^0.155.0",
     "typescript": "5.1.6",
     "valtio": "^1.11.2"
+  },
+  "devDependencies": {
+    "@types/react-color": "^3.0.6"
   }
 }

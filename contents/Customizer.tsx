@@ -13,9 +13,33 @@ import { EditorTabs, FilterTabs, DecalTypes } from "@/config/constants";
 import { fadeAnimation, slideAnimation } from "@/config/motion";
 
 import { AIPicker, ColorPicker, FilePicker, Tab, Button } from "@/components";
+import { useState } from "react";
 
 const Customizer = (): JSX.Element => {
   const snap = useSnapshot(state);
+
+  const [file, setFile] = useState<File | null>(null);
+
+  const [prompt, setPrompt] = useState<string>("");
+  const [generatingImage, setGeneratingImage] = useState<boolean>(false);
+
+  const [activeEditorTab, setActiveEditorTab] = useState<string>("");
+  const [activeFilterTab, setActiveFilterTab] = useState({ logoShirt: true, stylishShirt: false });
+
+  // show tab content depending on the active tab
+  const generateTabContent = () => {
+    switch (activeEditorTab) {
+      case "colorpicker":
+        return <ColorPicker />;
+      case "filepicker":
+        return <FilePicker />;
+      case "aipicker":
+        return <AIPicker />;
+      default:
+        return "null";
+    }
+  };
+
   return (
     <AnimatePresence>
       {!snap.intro && (
@@ -30,9 +54,16 @@ const Customizer = (): JSX.Element => {
             <div className="flex items-center min-h-screen">
               <div className="editortabs-container tabs">
                 {EditorTabs.map((tab) => (
-                  <Tab />
-                  // <Tab key={tab.name} tab={tab} />
+                  <Tab
+                    key={tab.name}
+                    tab={tab}
+                    isFilterTab
+                    isActiveTab={true}
+                    handleClick={() => setActiveEditorTab(tab.name)}
+                  />
                 ))}
+
+                {generateTabContent()}
               </div>
             </div>
           </motion.div>
@@ -52,8 +83,7 @@ const Customizer = (): JSX.Element => {
 
           <motion.div className="filtertabs-container" {...slideAnimation("up")}>
             {FilterTabs.map((tab) => (
-              <Tab />
-              // <Tab key={tab.name} tab={tab} />
+              <Tab key={tab.name} tab={tab} isFilterTab isActiveTab={true} handleClick={() => {}} />
             ))}
           </motion.div>
         </>
