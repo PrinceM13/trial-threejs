@@ -7,7 +7,7 @@ import { Model3D } from "@/components";
 import Image from "next/image";
 import { MouseEvent, useEffect, useRef, useState } from "react";
 
-const initialLensSize = { width: 200, height: 200 };
+const initialLensSize = { width: 400, height: 400 };
 const initialImageSize: number = 400;
 
 const displayImages = [
