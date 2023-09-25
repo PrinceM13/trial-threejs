@@ -2,7 +2,6 @@
 
 import { Environment, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import ReactImageMagnify from "react-image-magnify";
 
 import { Model3D } from "@/components";
 import Image from "next/image";
@@ -150,28 +149,6 @@ export default function Ahh(): JSX.Element {
           </Canvas>
         </div>
       </div>
-
-      {/* <div>Image with magnify (library)</div>
-      <div className="bg-purple-200">
-        <ReactImageMagnify
-          {...{
-            smallImage: {
-              alt: "Ahh",
-              isFluidWidth: false,
-              width: 600,
-              height: 600,
-              src: displayImageUrl
-            },
-            largeImage: {
-              src: displayImageUrl,
-              width: 800,
-              height: 800,
-              sizes: ""
-            },
-            isHintEnabled: true
-          }}
-        />
-      </div> */}
     </main>
   );
 }
