@@ -61,9 +61,9 @@ export default function Ahh(): JSX.Element {
         <div className="text-2xl">Image with magnify (pure)</div>
         <div className="flex gap-4">
           {[
-            { laber: "x1", value: 1 },
-            { laber: "x1.5", value: 1.5 },
             { laber: "x2", value: 2 },
+            { laber: "x3", value: 3 },
+            { laber: "x4", value: 4 },
             { laber: "x5", value: 5 }
           ].map((zoom) => (
             <div
