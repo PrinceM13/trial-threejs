@@ -12,4 +12,4 @@ export default function AhhModel(props: any) {
   );
 }
 
-useGLTF.preload("/3DModel_LowPoly.glb");
+useGLTF.preload("/3d-models/ahh/3DModel_LowPoly.glb");
