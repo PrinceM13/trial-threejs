@@ -5,6 +5,7 @@ import { Canvas } from "@react-three/fiber";
 
 import { Model3D } from "@/components";
 import Image from "next/image";
+
 import { MouseEvent, useEffect, useRef, useState } from "react";
 
 const initialLensSize = { width: 400, height: 400 };
@@ -13,6 +14,11 @@ const thumbnailSize: number = 80;
 
 const displayImages = [
   { order: 6, label: "3d-model", url: "" },
+  {
+    order: 7,
+    label: "video",
+    url: "https://res.cloudinary.com/dhr35jlbz/video/upload/v1674725996/samples/sea-turtle.mp4"
+  },
   { order: 1, label: "ahh-duo", url: "/images/ahh/ahh-duo.jpeg" },
   { order: 2, label: "ahh-yellow-front", url: "/images/ahh/ahh-yellow-front.jpeg" },
   { order: 3, label: "ahh-yellow-back", url: "/images/ahh/ahh-yellow-back.jpeg" },
@@ -26,7 +32,7 @@ export default function ProductDisplay(): JSX.Element {
   const [lensSize, setLensSize] = useState(initialLensSize);
   const [zoomRatio, setZoomRatio] = useState(2);
   const [isZooming, setIsZooming] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(displayImages[1]);
+  const [selectedImage, setSelectedImage] = useState(displayImages[2]);
 
   const imageRef = useRef<any>(null);
 
@@ -80,6 +86,16 @@ export default function ProductDisplay(): JSX.Element {
               <OrbitControls />
               <ambientLight intensity={0.5} />
             </Canvas>
+          </div>
+        ) : selectedImage.label === "video" ? (
+          <div style={{ width: (400 * 1920) / 1080, height: 400 }}>
+            <video
+              src="https://res.cloudinary.com/dhr35jlbz/video/upload/v1674725996/samples/sea-turtle.mp4"
+              width={(400 * 1920) / 1080}
+              controls
+              autoPlay
+              muted
+            />
           </div>
         ) : (
           <div className="flex items-center gap-4">
@@ -170,7 +186,14 @@ export default function ProductDisplay(): JSX.Element {
                     className="flex justify-center items-center bg-teal-700"
                     style={{ width: thumbnailSize, height: thumbnailSize }}
                   >
-                    3d model
+                    3D model
+                  </div>
+                ) : image.label === "video" ? (
+                  <div
+                    className="flex justify-center items-center bg-teal-700"
+                    style={{ width: thumbnailSize, height: thumbnailSize }}
+                  >
+                    Video
                   </div>
                 ) : (
                   <div
