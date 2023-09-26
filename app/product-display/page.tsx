@@ -8,30 +8,39 @@ import Image from "next/image";
 
 import { MouseEvent, useEffect, useRef, useState } from "react";
 
-const initialLensSize = { width: 400, height: 400 };
 const initialImageSize: number = 400;
 const thumbnailSize: number = 80;
 
+const initialZoomRatio: number = 2;
+const initialMiniMapSize: { width: number; height: number } = { width: 400, height: 400 };
+
 const displayImages = [
+  { order: 1, label: "ahh-duo", url: "/images/ahh/ahh-duo.jpeg" },
+  { order: 2, label: "ahh-yellow-front", url: "/images/ahh/ahh-yellow-front.jpeg" },
+  { order: 3, label: "ahh-yellow-back", url: "/images/ahh/ahh-yellow-back.jpeg" },
+  { order: 4, label: "ahh-brown-front", url: "/images/ahh/ahh-brown-front.jpeg" },
+  { order: 5, label: "ahh-brown-back", url: "/images/ahh/ahh-brown-back.jpeg" },
   { order: 6, label: "3d-model", url: "" },
   {
     order: 7,
     label: "video",
     url: "https://res.cloudinary.com/dhr35jlbz/video/upload/v1674725996/samples/sea-turtle.mp4"
-  },
-  { order: 1, label: "ahh-duo", url: "/images/ahh/ahh-duo.jpeg" },
-  { order: 2, label: "ahh-yellow-front", url: "/images/ahh/ahh-yellow-front.jpeg" },
-  { order: 3, label: "ahh-yellow-back", url: "/images/ahh/ahh-yellow-back.jpeg" },
-  { order: 4, label: "ahh-brown-front", url: "/images/ahh/ahh-brown-front.jpeg" },
-  { order: 5, label: "ahh-brown-back", url: "/images/ahh/ahh-brown-back.jpeg" }
+  }
 ];
 
 export default function ProductDisplay(): JSX.Element {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [bound, setBound] = useState({ x: 0, y: 0 });
-  const [lensSize, setLensSize] = useState(initialLensSize);
+
+  const [miniMapSize, setMiniMapSize] = useState(initialMiniMapSize);
+  const [focusLensSize, setFocusLensSize] = useState({
+    width: miniMapSize.width / initialZoomRatio,
+    height: miniMapSize.height / initialZoomRatio
+  });
+
   const [zoomRatio, setZoomRatio] = useState(2);
   const [isZooming, setIsZooming] = useState(false);
+
   const [selectedImage, setSelectedImage] = useState(displayImages[2]);
 
   const imageRef = useRef<any>(null);
@@ -98,7 +107,8 @@ export default function ProductDisplay(): JSX.Element {
             />
           </div>
         ) : (
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-8">
+            {/* zoom ratio */}
             <div className="flex flex-col gap-4">
               {[
                 { laber: "x2", value: 2 },
@@ -113,52 +123,94 @@ export default function ProductDisplay(): JSX.Element {
                       ? "bg-teal-500 hover:bg-teal-500 active:bg-teal-500"
                       : ""
                   }`}
-                  onClick={() => setZoomRatio(zoom.value)}
+                  onClick={() => {
+                    setZoomRatio(zoom.value);
+                    setFocusLensSize({
+                      width: miniMapSize.width / zoom.value,
+                      height: miniMapSize.height / zoom.value
+                    });
+                  }}
                 >
                   {zoom.laber}
                 </div>
               ))}
             </div>
+
             {/* image */}
-            <Image
-              ref={imageRef}
-              src={selectedImage.url}
-              width={initialImageSize}
-              height={initialImageSize}
-              alt="Ahh"
-              className="cursor-zoom-in"
+            <div
+              className="flex relative cursor-zoom-in items-center gap-4"
               onMouseEnter={() => setIsZooming(true)}
               onMouseLeave={() => setIsZooming(false)}
               onMouseMove={(e) => moveLens(e)}
               // onTouchMove={(e) => moveLens(e)}
-            />
+            >
+              {/* base image */}
+              <Image
+                ref={imageRef}
+                src={selectedImage.url}
+                width={initialImageSize}
+                height={initialImageSize}
+                alt="Ahh"
+              />
 
-            {/* lens */}
-            <div
-              className={`border-2 border-neutral-400 ${isZooming ? "" : "invisible"}`}
-              style={{
-                width: `${lensSize.width}px`,
-                height: `${lensSize.height}px`,
-                // left: `${position.x - lensSize.width / 2}px`,
-                // top: `${position.y - lensSize.height / 2}px`,
-                backgroundImage: `url(${selectedImage.url})`,
-                backgroundRepeat: "no-repeat",
-                backgroundSize: `${initialImageSize * zoomRatio}px ${
-                  initialImageSize * zoomRatio
-                }px`,
-                backgroundPosition: `-${
-                  position.x * zoomRatio - lensSize.width / 2 <
-                  initialImageSize * zoomRatio - lensSize.width
-                    ? position.x * zoomRatio - lensSize.width / 2
-                    : initialImageSize * zoomRatio - lensSize.width
-                }px -${
-                  position.y * zoomRatio - lensSize.height / 2 <
-                  initialImageSize * zoomRatio - lensSize.height
-                    ? position.y * zoomRatio - lensSize.height / 2
-                    : initialImageSize * zoomRatio - lensSize.height
-                }px`
-              }}
-            ></div>
+              {/* zoom lens */}
+              <div
+                className={`border-2 border-teal-500 bg-[#ffffffaa] ${
+                  isZooming ? "" : "invisible"
+                }`}
+                style={{
+                  width: `${focusLensSize.width}px`,
+                  height: `${focusLensSize.height}px`,
+                  position: "absolute",
+                  left: `${
+                    position.x - focusLensSize.width / 2 < 0
+                      ? 0
+                      : position.x - focusLensSize.width / 2 <
+                        initialImageSize - focusLensSize.width
+                      ? position.x - focusLensSize.width / 2
+                      : initialImageSize - focusLensSize.width
+                  }px`,
+                  top: `${
+                    position.y - focusLensSize.width / 2 < 0
+                      ? 0
+                      : position.y - focusLensSize.height / 2 <
+                        initialImageSize - focusLensSize.height
+                      ? position.y - focusLensSize.height / 2
+                      : initialImageSize - focusLensSize.height
+                  }px`
+                }}
+              ></div>
+
+              {/* mini map display */}
+              <div
+                className={`border-2 border-neutral-400 ${isZooming ? "" : "invisible"}`}
+                style={{
+                  width: `${miniMapSize.width}px`,
+                  height: `${miniMapSize.height}px`,
+                  backgroundImage: `url(${selectedImage.url})`,
+                  backgroundRepeat: "no-repeat",
+                  backgroundSize: `${initialImageSize * zoomRatio}px ${
+                    initialImageSize * zoomRatio
+                  }px`,
+
+                  backgroundPosition: `-${
+                    position.x * zoomRatio - miniMapSize.width / 2 < 0
+                      ? 0
+                      : position.x * zoomRatio - miniMapSize.width / 2 <
+                        initialImageSize * zoomRatio - miniMapSize.width
+                      ? position.x * zoomRatio - miniMapSize.width / 2
+                      : initialImageSize * zoomRatio - miniMapSize.width
+                  }px -${
+                    position.y * zoomRatio - miniMapSize.width / 2 < 0
+                      ? 0
+                      : position.y * zoomRatio - miniMapSize.height / 2 <
+                        initialImageSize * zoomRatio - miniMapSize.height
+                      ? position.y * zoomRatio - miniMapSize.height / 2
+                      : initialImageSize * zoomRatio - miniMapSize.height
+                  }px`
+                }}
+              ></div>
+            </div>
           </div>
         )}
 
