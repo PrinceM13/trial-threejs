@@ -15,17 +15,17 @@ const initialZoomRatio: number = 2;
 const initialMiniMapSize: { width: number; height: number } = { width: 400, height: 400 };
 
 const displayImages = [
-  { order: 1, label: "ahh-duo", url: "/images/ahh/ahh-duo.jpeg" },
-  { order: 2, label: "ahh-yellow-front", url: "/images/ahh/ahh-yellow-front.jpeg" },
-  { order: 3, label: "ahh-yellow-back", url: "/images/ahh/ahh-yellow-back.jpeg" },
-  { order: 4, label: "ahh-brown-front", url: "/images/ahh/ahh-brown-front.jpeg" },
-  { order: 5, label: "ahh-brown-back", url: "/images/ahh/ahh-brown-back.jpeg" },
-  { order: 6, label: "3d-model", url: "" },
   {
-    order: 7,
+    order: 1,
     label: "video",
     url: "https://res.cloudinary.com/dhr35jlbz/video/upload/v1674725996/samples/sea-turtle.mp4"
-  }
+  },
+  { order: 2, label: "3d-model", url: "" },
+  { order: 3, label: "ahh-duo", url: "/images/ahh/ahh-duo.jpeg" },
+  { order: 4, label: "ahh-yellow-front", url: "/images/ahh/ahh-yellow-front.jpeg" },
+  { order: 5, label: "ahh-yellow-back", url: "/images/ahh/ahh-yellow-back.jpeg" },
+  { order: 6, label: "ahh-brown-front", url: "/images/ahh/ahh-brown-front.jpeg" },
+  { order: 7, label: "ahh-brown-back", url: "/images/ahh/ahh-brown-back.jpeg" }
 ];
 
 export default function ProductDisplay(): JSX.Element {
@@ -33,6 +33,8 @@ export default function ProductDisplay(): JSX.Element {
   const [bound, setBound] = useState({ x: 0, y: 0 });
 
   const [miniMapSize, setMiniMapSize] = useState(initialMiniMapSize);
+  const [selectedMiniMapSize, setSelectedMiniMapSize] = useState(400);
+
   const [focusLensSize, setFocusLensSize] = useState({
     width: miniMapSize.width / initialZoomRatio,
     height: miniMapSize.height / initialZoomRatio
@@ -41,7 +43,7 @@ export default function ProductDisplay(): JSX.Element {
   const [zoomRatio, setZoomRatio] = useState(2);
   const [isZooming, setIsZooming] = useState(false);
 
-  const [selectedImage, setSelectedImage] = useState(displayImages[2]);
+  const [selectedImage, setSelectedImage] = useState(displayImages[0]);
 
   const imageRef = useRef<any>(null);
 
@@ -64,7 +66,7 @@ export default function ProductDisplay(): JSX.Element {
     return () => {
       window.removeEventListener("scroll", updateBound);
     };
-  }, []);
+  }, [miniMapSize, zoomRatio, selectedImage]);
 
   const moveLens = (e: MouseEvent) => {
     setPosition({ x: e.clientX - bound.x, y: e.clientY - bound.y });
@@ -109,31 +111,61 @@ export default function ProductDisplay(): JSX.Element {
         ) : (
           <div className="flex items-center gap-8">
             {/* zoom ratio */}
-            <div className="flex flex-col gap-4">
-              {[
-                { laber: "x2", value: 2 },
-                { laber: "x3", value: 3 },
-                { laber: "x4", value: 4 },
-                { laber: "x5", value: 5 }
-              ].map((zoom) => (
-                <div
-                  key={zoom.value}
-                  className={`px-2 py-1 rounded-2xl shadow-neutral-950 cursor-pointer bg-neutral-400 shadow-lg hover:bg-neutral-500 active:bg-neutral-600 ${
-                    zoom.value == zoomRatio
-                      ? "bg-teal-500 hover:bg-teal-500 active:bg-teal-500"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    setZoomRatio(zoom.value);
-                    setFocusLensSize({
-                      width: miniMapSize.width / zoom.value,
-                      height: miniMapSize.height / zoom.value
-                    });
-                  }}
-                >
-                  {zoom.laber}
-                </div>
-              ))}
+            <div className="flex gap-4">
+              <div className="flex flex-col items-center gap-4">
+                <div className="text-sm">Minimap</div>
+                {[
+                  { label: "S", value: 200 },
+                  { label: "M", value: 300 },
+                  { label: "L", value: 400 }
+                ].map((size) => (
+                  <div
+                    key={size.value}
+                    className={`w-8 text-center px-2 py-1 rounded-2xl shadow-neutral-950 cursor-pointer bg-neutral-400 shadow-lg hover:bg-neutral-500 active:bg-neutral-600 ${
+                      size.value == selectedMiniMapSize
+                        ? "bg-amber-500 hover:bg-amber-500 active:bg-amber-500"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setSelectedMiniMapSize(size.value);
+                      setMiniMapSize({ width: size.value, height: size.value });
+                      setFocusLensSize({
+                        width: size.value / zoomRatio,
+                        height: size.value / zoomRatio
+                      });
+                    }}
+                  >
+                    {size.label}
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-col items-center gap-4">
+                <div className="text-sm">Zoom ratio</div>
+                {[
+                  { label: "x2", value: 2 },
+                  { label: "x3", value: 3 },
+                  { label: "x4", value: 4 },
+                  { label: "x5", value: 5 }
+                ].map((zoom) => (
+                  <div
+                    key={zoom.value}
+                    className={`w-12 text-center px-2 py-1 rounded-2xl shadow-neutral-950 cursor-pointer bg-neutral-400 shadow-lg hover:bg-neutral-500 active:bg-neutral-600 ${
+                      zoom.value == zoomRatio
+                        ? "bg-teal-500 hover:bg-teal-500 active:bg-teal-500"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setZoomRatio(zoom.value);
+                      setFocusLensSize({
+                        width: miniMapSize.width / zoom.value,
+                        height: miniMapSize.height / zoom.value
+                      });
+                    }}
+                  >
+                    {zoom.label}
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* image */}
