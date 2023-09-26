@@ -112,7 +112,7 @@ export default function ProductDisplay(): JSX.Element {
           <div className="flex items-center gap-8">
             {/* zoom ratio */}
             <div className="flex gap-4">
-              <div className="flex flex-col items-center gap-4">
+              <div className="flex flex-col justify-center items-center gap-4 border-2 border-amber-500 rounded-lg px-4 py-8">
                 <div className="text-sm">Minimap</div>
                 {[
                   { label: "S", value: 200 },
@@ -139,8 +139,8 @@ export default function ProductDisplay(): JSX.Element {
                   </div>
                 ))}
               </div>
-              <div className="flex flex-col items-center gap-4">
-                <div className="text-sm">Zoom ratio</div>
+              <div className="flex flex-col justify-center items-center gap-4 border-2 border-pink-500 rounded-lg px-4 py-8">
+                <div className="text-sm">Zoom</div>
                 {[
                   { label: "x2", value: 2 },
                   { label: "x3", value: 3 },
@@ -151,7 +151,7 @@ export default function ProductDisplay(): JSX.Element {
                     key={zoom.value}
                     className={`w-12 text-center px-2 py-1 rounded-2xl shadow-neutral-950 cursor-pointer bg-neutral-400 shadow-lg hover:bg-neutral-500 active:bg-neutral-600 ${
                       zoom.value == zoomRatio
-                        ? "bg-teal-500 hover:bg-teal-500 active:bg-teal-500"
+                        ? "bg-pink-500 hover:bg-pink-500 active:bg-pink-500"
                         : ""
                     }`}
                     onClick={() => {
@@ -187,7 +187,7 @@ export default function ProductDisplay(): JSX.Element {
 
               {/* zoom lens */}
               <div
-                className={`border-2 border-teal-500 bg-[#ffffffaa] ${
+                className={`border-2 border-blue-500 bg-[#ffffffaa] ${
                   isZooming ? "" : "invisible"
                 }`}
                 style={{
